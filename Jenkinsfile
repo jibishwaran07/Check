@@ -6,8 +6,8 @@ pipeline {
         stage('Create Directory') {
             steps {
                 sh '''
-                    sudo mkdir -p /home/administrator/mydir/nested
-                    echo "Directory created."
+                    echo "Creating directory..."
+                    sudo mkdir -p /home/administrator/mydir
                 '''
             }
         }
@@ -15,28 +15,21 @@ pipeline {
         stage('Create File') {
             steps {
                 sh '''
-                    sudo touch /home/administrator/mydir/nested/NextFile.txt
-                    echo "File created."
+                    echo "Creating file..."
+                    sudo touch /home/administrator/mydir/NextFile.txt
                 '''
             }
         }
 
-        stage('Compile Java File') {
+        stage('Execute Java File') {
             steps {
                 sh '''
-                    # assumes your Java file lives inside repo at src/Main.java
-                    sudo javac src/Main.java -d /home/administrator/mydir/nested/
-                    echo "Java compile done."
-                '''
-            }
-        }
+                    echo "Compiling Java..."
+                    sudo javac src/Main.java -d /home/administrator/mydir/
 
-        stage('Run Java Program') {
-            steps {
-                sh '''
-                    cd /home/administrator/mydir/nested/
+                    echo "Running Java..."
+                    cd /home/administrator/mydir/
                     sudo java Main
-                    echo "Java executed."
                 '''
             }
         }
@@ -44,9 +37,9 @@ pipeline {
         stage('Give Permissions') {
             steps {
                 sh '''
+                    echo "Giving permissions..."
                     sudo chmod -R 755 /home/administrator/mydir
                     sudo chown -R administrator:administrator /home/administrator/mydir
-                    echo "Permissions updated."
                 '''
             }
         }
@@ -54,10 +47,7 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline completed successfully!"
-        }
-        failure {
-            echo "Pipeline failed!"
+            echo "Pipeline successfully completed!"
         }
     }
 }
