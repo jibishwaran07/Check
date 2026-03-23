@@ -8,6 +8,11 @@ pipeline {
                 sh '''
                     echo "Creating directory..."
                     sudo mkdir -p /home/administrator/mydir
+                    if [ $? -ne 0 ]; then
+                        echo "Directory creation failed!"
+                        exit 1
+                    fi
+                    echo "Directory created successfully!"
                 '''
             }
         }
@@ -17,29 +22,26 @@ pipeline {
                 sh '''
                     echo "Creating file..."
                     sudo touch /home/administrator/mydir/NextFile.txt
+                    if [ $? -ne 0 ]; then
+                        echo "File creation failed!"
+                        exit 1
+                    fi
+                    echo "File created successfully!"
                 '''
             }
         }
 
-        stage('Execute Java File') {
+        stage('Change File Permission') {
             steps {
                 sh '''
-                    echo "Compiling Java..."
-                    sudo javac src/Main.java -d /home/administrator/mydir/
-
-                    echo "Running Java..."
-                    cd /home/administrator/mydir/
-                    sudo java Main
-                '''
-            }
-        }
-
-        stage('Give Permissions') {
-            steps {
-                sh '''
-                    echo "Giving permissions..."
-                    sudo chmod -R 755 /home/administrator/mydir
-                    sudo chown -R administrator:administrator /home/administrator/mydir
+                    echo "Changing file permissions..."
+                    sudo chmod 755 /home/administrator/mydir
+                    sudo chmod 644 /home/administrator/mydir/NextFile.txt
+                    if [ $? -ne 0 ]; then
+                        echo "Permission change failed!"
+                        exit 1
+                    fi
+                    echo "Permissions applied successfully!"
                 '''
             }
         }
@@ -47,7 +49,10 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline successfully completed!"
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed!"
         }
     }
 }
