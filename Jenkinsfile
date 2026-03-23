@@ -7,7 +7,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Creating directory..."
-                    sudo mkdir -p /home/administrator/mydir
+                    sudo mkdir -p /home/administrator/mydirect
                     if [ $? -ne 0 ]; then
                         echo "Directory creation failed!"
                         exit 1
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Creating file..."
-                    sudo touch /home/administrator/mydir/NextFile.txt
+                    sudo touch /home/administrator/mydirect/NextFile.txt
                     if [ $? -ne 0 ]; then
                         echo "File creation failed!"
                         exit 1
@@ -35,8 +35,8 @@ pipeline {
             steps {
                 sh '''
                     echo "Changing file permissions..."
-                    sudo chmod 755 /home/administrator/mydir
-                    sudo chmod 644 /home/administrator/mydir/NextFile.txt
+                    sudo chmod 755 /home/administrator/mydirect
+                    sudo chmod 644 /home/administrator/mydirect/NextFile.txt
                     if [ $? -ne 0 ]; then
                         echo "Permission change failed!"
                         exit 1
